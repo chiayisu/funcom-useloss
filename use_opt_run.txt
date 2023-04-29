@@ -1,0 +1,32 @@
+The idea of use_opt is to train the models with a different loss function than categorical crossentropy.
+Categorical crossentropy computes loss by taking a one hot vector as y_true and the softmax output of the model as y_pred.
+In this work we change the y_true from using a one-hot vector to using a probability distribution.
+The new loss function thus calculates the categorical crossentropy loss between this new y_true and y_pred.
+
+To run this model, we run the following command:
+
+time python train.py --gpu=*gpu #* --epochs=*epoch count* --model-type=attendgru-use --with-simmats --simmat-file=*name of simmat file* --loss-type=use-dist-cmc5 --data=*/path/to/data* --outdir=*/path/to/outdir*
+
+--model-type=attendgru-use is a new model type equipped to compute the new loss function on the attendgru model
+    -> more models are coming for all the other baselines
+
+--with-simmat tells the model that it is running this model with the similarity matrix.
+
+--simmat-file=*name of simmat file* is the flag to include the y_true distribution.
+    -> ex: softmax_usec3_corrected.pkl includes the distribution with probabilities <0.90, 0.05, 0.05> for the top 3 most similar words and 0 for the rest instead of using the one hot vector. Therefore, softmax_usec1_corrected.pkl is the same as using no simmat and running off the shelf categorical crossentropy
+
+--loss-type=use-dist-cmc5 is the new loss function that replaces the one hot vector with the similarity matrix distribution
+
+--data=*/path/to/data* is the path to the directory with the dataset and the similarity matrices.
+    -> Example path: /nfs/projects/funcom/data/javastmt/q90
+
+--outdir=*/path/to/data* is the path to the directory to store the model files
+    -> Example path: /nfs/projects/funcom/data/outdir
+
+
+To run the prediction on a trained model, we run the following command:
+
+time python predict.py */path/to/model/file* --gpu=*gpu #*  --with-simmats --simmat-file=*name of simmat file* --loss-type=use-dist-cmc5 --data=*/path/to/data* --outdir=*/path/to/outdir*
+
+*/path/to/model/file* is the path to the directory followed by the name of the file
+    -> Ex: /nfs/projects/funcom/data/outdir/models/attendgru-use_E06_1643141572.h5
