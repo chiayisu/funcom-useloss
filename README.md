@@ -1,12 +1,12 @@
 # code for replication of results for paper "Semantic Similarity Loss for Neural Source Code Summarization"
 
 ## Preparation
-- Please create a directory called outdir and three directories inside outdir called histories, models, and predictions.
+- Please create a directory named outdir with 3 subdirectories named histories, models, and predictions.
 - Please download the model file from [link]() and put the files in config folder to your local directory histories and put the files in models folder to your local directory models if you want to finetune models with simile or bleu.
 - Note that you need to put files in config folder to the same folder as the outdir argument in train.py
 
 ## Step 0 Dataset
-- We use three dataset for our experiments.
+- We use three datasets for our experiments.
   - Funcom-java: Le Clair et al. [Arxiv](https://arxiv.org/abs/1904.02660)
   - funcom-java-long: Bansal et al. [Data](https://github.com/aakashba/humanattn). Please download q90 data and extract it to /nfs/projects/funcom/data/javastmt/q90 or change the --data argument in train.py.
   - python
@@ -47,10 +47,20 @@
   python3 predict.py outdir/models/transformer-base.h5 --gpu=0 --data=./mydata
   ```
 ## Step 3 Metrics
-- We provide scripts for calculating the metrics that we report on the paper. 
+- We provide scripts for calculating the metrics that we report on the paper. The following commands are for Bleu score, meteor, and USE score respectively.
+  ```
+  python3 bleu.py {path to your preiction file} --data={path to reference file}
+  ```
   
- 
-
-
+  ```
+  python3 meteor.py {path to your preiction file} --data={path to reference file}
+  ```
   
- 
+  ```
+  python3 use_score_v.py {path to your preiction file} --data={path to reference file}
+  ```
+  For example, if we want to compute the Bleu score and the path of the prediction file is outdir/predictions/transformer-base.txt and the reference file is on ./mydata directory, the command will be as follows.
+  
+  ```
+  python3 bleu.py outdir/predictions/transformer-base.txt --data=./mydata
+  ```
