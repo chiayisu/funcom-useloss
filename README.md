@@ -4,6 +4,11 @@
 - Please create a directory named outdir with 3 subdirectories named histories, models, and predictions.
 - Please download the model file from [link]() and put the files in config folder to your local directory histories and put the files in models folder to your local directory models if you want to finetune models with simile or bleu.
 - Note that you need to put files in config folder to the same folder as the outdir argument in train.py
+- For setting up your environment, run the following command. We recommend you to use virtual environment.
+
+  ```
+  pip install -r requirements.txt
+  ```
 
 ## Step 0 Dataset
 - We use three datasets for our experiments.
