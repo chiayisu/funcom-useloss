@@ -111,8 +111,6 @@ def custom_use_simile_loss(index_tensor, comwords_tensor):
 
 
         loss = keras.losses.categorical_crossentropy(y_true, y_pred)
-        lossz = tf.zeros_like(loss)
-        loss = loss * lossz
 
         y_true_arg = tf.argmax(y_true, axis=1)
         y_pred_arg = tf.argmax(y_pred, axis=1)
