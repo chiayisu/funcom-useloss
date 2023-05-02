@@ -40,7 +40,7 @@
     python3 train.py --model-type=transformer-base-simile  --gpu=0 --batch-size=50 --epochs=1 --data=./mydata --load-model --model-file=./mymodel/transformer.h5
     ```   
 ## Step 2 Predictions
-- Once your training procedure is done, you can see the scrren with the accuracy on validation set. Pick the one before the biggest drop on validation accuracy. After you decide the model, run the following command to generate the prediction files.
+- Once your training procedure is done, you can see the screen with the accuracy on validation set. Pick the one before the biggest drop on validation accuracy. After you decide the model, run the following command to generate the prediction files.
 
   ```
   python3 predict.py {path to your model} --gpu=0 --data={your data path}

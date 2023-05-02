@@ -56,7 +56,7 @@ def cosine_similarity_score(x, y):
 	cosine_similarity_matrix = cosine_similarity(x, y)
 	return cosine_similarity_matrix
 
-def prep_dataset(reffile, predfile, batchsize, delim, tdats, sdats, lim_overlap_sdats):
+def prep_dataset(reffile, predfile, batchsize, delim):
 	preds = dict()
 	predicts = open(predfile, 'r')
 	for c, line in enumerate(predicts):
@@ -77,26 +77,7 @@ def prep_dataset(reffile, predfile, batchsize, delim, tdats, sdats, lim_overlap_
 		com = com.split()
 		com = fil(com)
 
-		if lim_overlap_sdats > -1:
-			# remove the tdats from the sdats
-			a_multiset = collections.Counter(sdats[fid])
-			b_multiset = collections.Counter(tdats[fid])
-			#overlap = list((a_multiset & b_multiset).elements())
-			a_remainder = list((a_multiset - b_multiset).elements())
-			#b_remainder = list((b_multiset - a_multiset).elements())
-
-			s = set(set(com) & set(a_remainder)) # words in sdats and coms
-			t = set(set(com) & set(tdats[fid]))
-			o = set(set(a_remainder) - set(tdats[fid]))
-			s_o = set(set(o) & set(com)) # words in sdats (but not tdats) and coms
-
-			o_s = len(s_o)
-			o_t = len(t)
-
-			#if not(o_s > lim_overlap_sdats):
-			if not(o_s == lim_overlap_sdats):
-				continue
-
+		
 		if len(com) < 1:
 			continue
 		try:
@@ -115,52 +96,28 @@ if __name__ == '__main__':
 	parser.add_argument('input', type=str, default=None)
 	parser.add_argument('--data', dest='dataprep', type=str, default='/nfs/projects/funcom/data/javastmt/output')
 	parser.add_argument('--coms-filename', dest='comsfilename', type=str, default='coms.test')
-	parser.add_argument('--tdats-filename', dest='tdatsfilename', type=str, default='tdats.test')
-	parser.add_argument('--sdats-filename', dest='sdatsfilename', type=str, default='sdats.test')
 	parser.add_argument('--batchsize', dest='batchsize', type=int, default=50000)
 	# parser.add_argument('--data', dest='datapath', type=str, default='/nfs/projects/simmetrics/data/standard/output')
 	parser.add_argument('--gpu', dest='gpu', type=str, default='')
 	parser.add_argument('--challenge', action='store_true', default=False)
 	parser.add_argument('--vmem-limit', dest='vmemlimit', type=int, default=0)
 	parser.add_argument('--delim', dest='delim', type=str, default='<SEP>')
-	parser.add_argument('--lim-overlap-sdats', dest='limoverlapsdats', type=int, default=-1)
 	args = parser.parse_args()
 	predfile = args.input
 	comsfile = args.comsfilename
-	tdatsfilename = args.tdatsfilename
-	sdatsfilename = args.sdatsfilename
 	batchsize = args.batchsize
 	dataprep = args.dataprep
 	gpu = args.gpu
 	challenge = args.challenge
 	vmemlimit = args.vmemlimit
 	delim = args.delim
-	lim_overlap_sdats = args.limoverlapsdats
 
 	comsfile = dataprep + '/' + comsfile
 
 	tdats = dict()
 	sdats = dict()
 
-	if lim_overlap_sdats != -1:
-		tdatsf = open('%s/%s' % (dataprep, tdatsfilename), 'r')
-		for c, line in enumerate(tdatsf):
-			(fid, tdat) = line.split(delim)
-			fid = int(fid)
-			tdat = tdat.split()
-			tdat = fil(tdat)
-			tdats[fid] = tdat
-		tdatsf.close()
-
-		sdatsf = open('%s/%s' % (dataprep, sdatsfilename), 'r')
-		for c, line in enumerate(sdatsf):
-			(fid, sdat) = line.split(delim)
-			fid = int(fid)
-			sdat = sdat.split()
-			sdat = fil(sdat)
-			sdats[fid] = sdat
-		sdatsf.close()
-
+	
 	os.environ['CUDA_VISIBLE_DEVICES'] = gpu
 	gpus = tf.config.experimental.list_physical_devices('GPU')
 	if gpus:
@@ -177,5 +134,5 @@ if __name__ == '__main__':
 			except RuntimeError as e:
 				print(e)
 	
-	score = prep_dataset(comsfile, predfile, batchsize, delim, tdats, sdats, lim_overlap_sdats)
+	score = prep_dataset(comsfile, predfile, batchsize, delim)
 	print(score)

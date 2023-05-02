@@ -82,10 +82,6 @@ if __name__ == '__main__':
     parser.add_argument('--challenge', action='store_true', default=False)
     parser.add_argument('--obfuscate', action='store_true', default=False)
     parser.add_argument('--sbt', action='store_true', default=False)
-    parser.add_argument('--lim-overlap', dest='limoverlap', type=int, default=-1)
-    parser.add_argument('--lim-overlap-sdats', dest='limoverlapsdats', type=int, default=-1)
-    parser.add_argument('--tdats-filename', dest='tdatsfilename', type=str, default='tdats.test')
-    parser.add_argument('--sdats-filename', dest='sdatsfilename', type=str, default='sdats.test')
     parser.add_argument('--coms-filename', dest='comsfilename', type=str, default='coms.test')
     parser.add_argument('--sentence-bleus', dest='sentencebleus', action='store_true', default=False)
     parser.add_argument('--delim', dest='delim', type=str, default='<SEP>')
@@ -94,10 +90,6 @@ if __name__ == '__main__':
     outdir = args.outdir
     dataprep = args.dataprep
     input_file = args.input
-    lim_overlap = args.limoverlap
-    lim_overlap_sdats = args.limoverlapsdats
-    tdatsfilename = args.tdatsfilename
-    sdatsfilename = args.sdatsfilename
     comsfilename = args.comsfilename
     sentencebleus = args.sentencebleus
     delim = args.delim
@@ -106,32 +98,7 @@ if __name__ == '__main__':
         print('Please provide an input file to test')
         exit()
 
-    if lim_overlap != -1 or lim_overlap_sdats != -1:
-        prep('preparing tdats list... ')
-        tdats = dict()
-        tdatsf = open('%s/%s' % (dataprep, tdatsfilename), 'r')
-        for c, line in enumerate(tdatsf):
-            (fid, tdat) = line.split(delim)
-            fid = int(fid)
-            tdat = tdat.split()
-            tdat = fil(tdat)
-            tdats[fid] = tdat
-        tdatsf.close()
-        drop()
-
-    if lim_overlap_sdats != -1:
-        prep('preparing sdats list... ')
-        sdats = dict()
-        sdatsf = open('%s/%s' % (dataprep, sdatsfilename), 'r')
-        for c, line in enumerate(sdatsf):
-            (fid, sdat) = line.split(delim)
-            fid = int(fid)
-            sdat = sdat.split()
-            sdat = fil(sdat)
-            sdats[fid] = sdat
-        sdatsf.close()
-        drop()
-
+    
     prep('preparing predictions list... ')
     preds = dict()
     predicts = open(input_file, 'r')
@@ -165,34 +132,7 @@ if __name__ == '__main__':
             continue
 
 
-        if lim_overlap_sdats > -1:
-            # remove the tdats from the sdats
-            a_multiset = collections.Counter(sdats[fid])
-            b_multiset = collections.Counter(tdats[fid])
-            #overlap = list((a_multiset & b_multiset).elements())
-            a_remainder = list((a_multiset - b_multiset).elements())
-            #b_remainder = list((b_multiset - a_multiset).elements())
-
-            s = set(set(com) & set(a_remainder)) # words in sdats and coms
-            t = set(set(com) & set(tdats[fid]))
-            o = set(set(a_remainder) - set(tdats[fid]))
-            s_o = set(set(o) & set(com)) # words in sdats (but not tdats) and coms
-
-            o_s = len(s_o)
-            o_t = len(t)
-
-            if not(o_s > lim_overlap_sdats):
-            #if not(o_s == lim_overlap_sdats):
-                continue
-
-
-        if lim_overlap != -1:
-            t = list(set(com) & set(tdats[fid][:12]))
-            overlap = len(t) #/ len(set(com))
-            
-            if overlap != lim_overlap:
-                continue
-
+        
         try:
             newpreds.append(preds[fid])
             #print(fid, preds[fid])
