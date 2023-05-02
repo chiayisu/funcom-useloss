@@ -10,6 +10,7 @@ from tensorflow.keras.optimizers import RMSprop, Adamax
 from tensorflow.keras import utils, metrics
 
 from custom.qstransformer_layers import TransformerBlock, TokenAndPositionEmbedding, MultiHeadAttentionBlock
+from custom.qs_loss import custom_cce_loss
 
 # setransformer baseline of IEEE Transactions on Reliability Li et al.
 # https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=24
@@ -33,7 +34,7 @@ class SeTransformer:
         self.attheads = 2 # number of attention heads
         self.recdims = 100 
         self.ffdims = 100 # hidden layer size in feed forward network inside transformer
-        self.kernal = 3 # cnn kernal size
+        self.kernel = 3 # cnn kernel size
         self.pool_size = 2 # cnn pool size
         self.strides = 1 # cnn pool layere stride size
         self.padding = False # if pad to the same size as input after convolution and pooling
@@ -50,21 +51,21 @@ class SeTransformer:
         ee = TokenAndPositionEmbedding(self.datlen, self.tdatvocabsize, self.embdims)
         eeout = ee(dat_input)
         if(not self.padding):
-            eeout = Conv1D(self.embdims, self.kernal, activation='tanh',input_shape=(None, ))(eeout)
+            eeout = Conv1D(self.embdims, self.kernel, activation='tanh',input_shape=(None, ))(eeout)
             eeout = MaxPooling1D(pool_size=self.pool_size, strides=self.strides, padding='valid')(eeout)
         else:
-            eeout = Conv1D(self.embdims, self.kernal, activation='tanh',input_shape=(None, self.embdims), padding ='same')(eeout)
+            eeout = Conv1D(self.embdims, self.kernel, activation='tanh',input_shape=(None, self.embdims), padding ='same')(eeout)
             eeout = MaxPooling1D(pool_size=self.pool_size, strides=self.strides, padding='same')(eeout)
         eeout = Dense(self.embdims, activation="tanh")(eeout)
 
         se = TokenAndPositionEmbedding(self.smllen, self.smlvocabsize, self.embdims)
         seout = se(sml_input)
         if(not self.padding):
-            seconv = Conv1D(self.embdims, self.kernal, activation='tanh',input_shape=(None, ))
+            seconv = Conv1D(self.embdims, self.kernel, activation='tanh',input_shape=(None, ))
             seconvout = seconv(seout)
             seout = MaxPooling1D(pool_size=self.pool_size, strides=self.strides, padding='valid')(seconvout)
         else:
-            seconv = Conv1D(self.embdims, self.kernal, activation='tanh',input_shape=(None, self.embdims), padding='same')
+            seconv = Conv1D(self.embdims, self.kernel, activation='tanh',input_shape=(None, self.embdims), padding='same')
             seconvout = seconv(seout)
             seout = MaxPooling1D(pool_size=self.pool_size, strides=self.strides, padding='same')(seconvout)
         seout = Dense(self.embdims, activation="tanh")(seout)

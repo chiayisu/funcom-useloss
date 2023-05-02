@@ -6,10 +6,10 @@ import tensorflow.keras.utils
 import tensorflow as tf
 from tensorflow.keras import metrics
 
-# ast-attendgru baseline of ICSE'19 LeClair et al.
+
+# Thanks LeClair et al. for providing the open source implementation of their model.
 # https://arxiv.org/abs/1902.01954
 # https://github.com/mcmillco/funcom
-
 
 class AstAttentionGRUModel:
     def __init__(self, config):

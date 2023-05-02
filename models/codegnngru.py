@@ -8,7 +8,7 @@ import tensorflow as tf
 
 from custom.graphlayers import GCNLayer
 
-# codegnngru baseline from ICPC'20 LeClair et al.
+# Thanks LeClair et al. for providing the open source implementation of their model.
 # configuration set to best performing approach in the paper's experiment
 
 
