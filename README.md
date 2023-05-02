@@ -16,7 +16,7 @@
   - funcom-java-long: Bansal et al. [Data](https://github.com/aakashba/humanattn). Please download q90 data and extract it to /nfs/projects/funcom/data/javastmt/q90 or change the --data argument in train.py.
   - funcom-python: We provide this dataset in the [link](https://drive.google.com/drive/folders/1KHpdlbDTs7v5FB8diwUPhCakBqvcFF9T?usp=share_link)
 
-## Step 1 Train your model
+## Step 1 Training
 - To train the use-seq model with the data and gpu options, run the following command. Note that transformer-base means the transformer model.
 
   ```
