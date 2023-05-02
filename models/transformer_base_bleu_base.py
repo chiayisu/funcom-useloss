@@ -12,6 +12,9 @@ from tensorflow.keras import utils, metrics
 from custom.qstransformer_layers import TransformerBlock, TokenAndPositionEmbedding, MultiHeadAttentionBlock
 from custom.qs_loss import custom_bleu_base_loss
 
+# transformer bleu implementation of Wieting et al.
+# https://arxiv.org/abs/1909.06694
+
 class TransformerBaseBleuBase:
     def __init__(self, config):
         

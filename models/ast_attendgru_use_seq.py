@@ -7,11 +7,7 @@ import tensorflow as tf
 from tensorflow.keras import metrics
 from custom.qs_loss import use_prep, custom_use_seq
 
-# ast-attendgru baseline of ICSE'19 LeClair et al.
-# https://arxiv.org/abs/1902.01954
-# https://github.com/mcmillco/funcom
 
-# sometimes called ast-attendgru-flat
 
 class AstAttentionGRUUSESeqModel:
     def __init__(self, config):

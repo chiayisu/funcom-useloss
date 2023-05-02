@@ -9,10 +9,7 @@ import tensorflow as tf
 from custom.graphlayers import GCNLayer
 from custom.qs_loss import use_prep, custom_use_seq
 
-# codegnngru baseline from ICPC'20 LeClair et al.
-# configuration set to best performing approach in the paper's experiment
 
-# sometimes called ast-attendgru-gnn
 
 class CodeGNNGRUUSESeqModel:
     def __init__(self, config):

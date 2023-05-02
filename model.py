@@ -2,25 +2,21 @@ import tensorflow.keras as keras
 import tensorflow as tf
 
 from models.ast_attendgru import AstAttentionGRUModel as ast_attendgru
-from models.ast_attendgru_use_word import AstAttentionGRUUSEWordModel as ast_attendgru_use_word
 from models.ast_attendgru_use_seq import AstAttentionGRUUSESeqModel as ast_attendgru_use_seq
 from models.ast_attendgru_simile import AstAttentionGRUSimile as ast_attendgru_simile
 from models.ast_attendgru_bleu_base import AstAttentionGRUBleuBase as ast_attendgru_bleu_base
 from models.codegnngru import CodeGNNGRUModel as codegnngru
 from models.codegnngru_simile import CodeGNNGRUModelSimile as codegnngru_simile
 from models.codegnngru_bleu_base import CodeGNNGRUModelBleuBase as codegnngru_bleu_base
-from models.codegnngru_use_word import CodeGNNGRUUSEWordModel as codegnngru_use_word
 from models.codegnngru_use_seq import CodeGNNGRUUSESeqModel as codegnngru_use_seq
 from models.transformer_base import TransformerBase as xformer_base
 from models.transformer_base_bleu_base import TransformerBaseBleuBase as xformer_base_bleu_base
 from models.transformer_base_use_seq import TransformerBaseUSESeq as xformer_base_use_seq
 from models.transformer_base_simile import TransformerBaseSimile as xformer_base_simile
-from models.transformer_base_use_word import TransformerBaseUSEWord as xformer_base_use_word
 from models.setransformer import SeTransformer as sexformer
 from models.setransformer_use_seq import SeTransformerUSESeq as sexformer_use_seq
 from models.setransformer_bleu_base import SeTransformerBleuBase as sexformer_bleu_base
 from models.setransformer_simile import SeTransformerSimile as sexformer_simile
-from models.setransformer_use_word import SeTransformerUSEWord as sexformer_use_word
 
 
 def create_model(modeltype, config):
@@ -29,8 +25,6 @@ def create_model(modeltype, config):
         mdl = ast_attendgru(config)
     elif modeltype == 'ast-attendgru-bleu-base':
         mdl = ast_attendgru_bleu_base(config)
-    elif modeltype == 'ast-attendgru-use-word':
-        mdl = ast_attendgru(config)
     elif modeltype == 'ast-attendgru-use-seq':
         mdl = ast_attendgru_use_seq(config)
     elif modeltype == 'ast-attendgru-simile':
@@ -39,9 +33,6 @@ def create_model(modeltype, config):
         mdl = codegnngru(config)
     elif modeltype == 'codegnngru-simile':
         mdl = codegnngru_simile(config)
-        mdl = codegnngru_sep_use_seq(config)
-    elif modeltype == 'codegnngru-use-word':
-        mdl = codegnngru_use_word(config)
     elif modeltype == 'codegnngru-use-seq':
         mdl = codegnngru_use_seq(config)
     elif modeltype == 'codegnngru-bleu-base':
@@ -54,12 +45,8 @@ def create_model(modeltype, config):
         mdl = xformer_base_use_seq(config)
     elif modeltype == 'transformer-base-simile':
         mdl = xformer_base_simile(config)
-    elif modeltype == 'transformer-base-use-word':
-        mdl = xformer_base_use_word(config)
     elif modeltype == 'setransformer':
         mdl = sexformer(config)
-    elif modeltype == 'setransformer-use-word':
-        mdl = sexformer_use_word(config)
     elif modeltype == 'setransformer-use-seq':
         mdl = sexformer_use_seq6(config)
     elif modeltype == 'setransformer-simile':

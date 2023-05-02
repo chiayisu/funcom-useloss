@@ -12,6 +12,7 @@ from tensorflow.keras import utils, metrics
 from custom.qstransformer_layers import TransformerBlock, TokenAndPositionEmbedding, MultiHeadAttentionBlock
 from custom.qs_loss import use_prep, custom_use_seq
 
+
 class SeTransformerUSESeq:
     def __init__(self, config):
         

@@ -9,10 +9,9 @@ import tensorflow as tf
 from custom.graphlayers import GCNLayer
 from custom.qs_loss import use_prep, custom_use_simile_loss
 
-# codegnngru baseline from ICPC'20 LeClair et al.
-# configuration set to best performing approach in the paper's experiment
+# codegnngru simile implementation of Wieting et al.
+# https://arxiv.org/abs/1909.06694
 
-# sometimes called ast-attendgru-gnn
 
 class CodeGNNGRUModelSimile:
     def __init__(self, config):

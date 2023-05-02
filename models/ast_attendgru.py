@@ -10,7 +10,6 @@ from tensorflow.keras import metrics
 # https://arxiv.org/abs/1902.01954
 # https://github.com/mcmillco/funcom
 
-# sometimes called ast-attendgru-flat
 
 class AstAttentionGRUModel:
     def __init__(self, config):

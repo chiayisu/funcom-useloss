@@ -9,10 +9,8 @@ import tensorflow as tf
 from custom.graphlayers import GCNLayer
 from custom.qs_loss import use_prep, custom_bleu_base_loss
 
-# codegnngru baseline from ICPC'20 LeClair et al.
-# configuration set to best performing approach in the paper's experiment
-
-# sometimes called ast-attendgru-gnn
+# codegnngru bleu implementation of Wieting et al.
+# https://arxiv.org/abs/1909.06694
 
 class CodeGNNGRUModelBleuBase:
     def __init__(self, config):

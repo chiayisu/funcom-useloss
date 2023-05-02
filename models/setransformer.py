@@ -11,6 +11,9 @@ from tensorflow.keras import utils, metrics
 
 from custom.qstransformer_layers import TransformerBlock, TokenAndPositionEmbedding, MultiHeadAttentionBlock
 
+# setransformer baseline of IEEE Transactions on Reliability Li et al.
+# https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=24
+
 class SeTransformer:
     def __init__(self, config):
         

@@ -19,7 +19,6 @@ import parallel_sort
 sys.path.append(os.path.abspath('../'))
 import tokenizer
 from myutils import index2word
-import gc
 
 
 
@@ -35,26 +34,23 @@ def use_prep(comstok):
 
 
 
-
+# Basic cce loss
 def custom_cce_loss():
     def qs_cce_loss(y_true, y_pred):
         cce = keras.losses.categorical_crossentropy(y_true, y_pred)
-        #print(cce)
-        #quit()
         return cce
     return qs_cce_loss
 
 
+# Implementation of Bleu loss proposed by Wieting et al.
+# https://arxiv.org/abs/1909.06694
 
 def custom_bleu_base_loss(index_tensor, comwords_tensor):
     def qs_cce_loss(y_true, y_pred):
-        beta = 0.8
-        comlen = 13
+        comlen = 13 # length of output comment
 
 
         loss = keras.losses.categorical_crossentropy(y_true, y_pred)
-        #lossz = tf.zeros_like(loss)
-        #loss = loss * lossz
 
         y_true_arg = tf.argmax(y_true, axis=1)
         y_pred_arg = tf.argmax(y_pred, axis=1)
@@ -100,16 +96,13 @@ def custom_bleu_base_loss(index_tensor, comwords_tensor):
     return qs_cce_loss
 
 
-
-
+# Implementation of Simile loss proposed by Wieting et al.
+# https://arxiv.org/abs/1909.06694
 
 
 def custom_use_simile_loss(index_tensor, comwords_tensor):
     def qs_cce_loss(y_true, y_pred):
-        beta = 0.8
-        comlen = 13
-
-
+        comlen = 13 # length of output comment
         loss = keras.losses.categorical_crossentropy(y_true, y_pred)
 
         y_true_arg = tf.argmax(y_true, axis=1)
@@ -193,32 +186,12 @@ def custom_use_simile_loss(index_tensor, comwords_tensor):
 
     return qs_cce_loss
 
-def custom_use_loss_word(index_tensor, comwords_tensor):
-    def qs_cce_loss(y_true, y_pred):
-        beta = 0.8
-        y_true_arg = tf.argmax(y_true, axis=1)
-        y_pred_arg = tf.argmax(y_pred, axis=1)
-        i2wtable = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(index_tensor, comwords_tensor), default_value='<UNK>')
-
-        y_true_comwords = i2wtable.lookup(y_true_arg)
-        y_pred_comwords = i2wtable.lookup(y_pred_arg)
-        y_true_emb = model(y_true_comwords)
-        y_pred_emb = model(y_pred_comwords)
-        use_score = keras.losses.cosine_similarity(y_true_emb, y_pred_emb)
-        use_score = use_score * (-1)
-        loss = keras.losses.categorical_crossentropy(y_true, y_pred)
-        weight = tf.math.exp(use_score/beta)
-        loss *= weight
-        return loss
- 
-
-    return qs_cce_loss
 
 
 def custom_use_seq(index_tensor, comwords_tensor):
     def qs_cce_loss(y_true, y_pred):
-        beta = 0.8
-        comlen = 13
+        beta = 0.8 # beta value for the adjustment of exponential function
+        comlen = 13 # length of output comment
 
 
         loss = keras.losses.categorical_crossentropy(y_true, y_pred)
@@ -254,6 +227,8 @@ def custom_use_seq(index_tensor, comwords_tensor):
         y_pred_comwords_use = model(y_pred_comwords_sen)
         
         use_score = tf.keras.losses.cosine_similarity(y_true_comwords_use, y_pred_comwords_use)
+        
+        # reverse because the output of tf.keras.losses.cosine_similarity() will be 1 if two inputs are totally opposite and vice versa.
         use_score = use_score * (-1)
         use_score = tf.expand_dims(use_score, axis=1)
         use_score = tf.repeat(use_score, repeats=[comlen], axis=1)

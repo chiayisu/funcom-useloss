@@ -11,7 +11,6 @@ from custom.graphlayers import GCNLayer
 # codegnngru baseline from ICPC'20 LeClair et al.
 # configuration set to best performing approach in the paper's experiment
 
-# sometimes called ast-attendgru-gnn
 
 class CodeGNNGRUModel:
     def __init__(self, config):
